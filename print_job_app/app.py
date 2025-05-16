@@ -4,6 +4,7 @@ import datetime
 import uuid
 import mimetypes
 from itertools import groupby
+import re
 
 app = Flask(__name__)
 
@@ -16,7 +17,9 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 def extract_company(email):
     """Get company from email"""
-    return email.split('@')[0] if '@' in email else email
+    company = email.split('@')[0] if '@' in email else email
+    # Remove special chars, keep only alphanumeric and underscore
+    return re.sub(r'[^a-zA-Z0-9_]', '', company)
 
 @app.route('/')
 def index():
