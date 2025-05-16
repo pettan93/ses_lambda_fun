@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rabbit POC</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/static/image.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+        h2 {
+            color: #444;
+            margin-top: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4CAF50;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        .company-section {
+            margin-bottom: 40px;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .company-name {
+            color: #2c3e50;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4CAF50;
+        }
+        .company-info {
+            margin: 15px 0;
+            color: #555;
+        }
+        .highlighted-email {
+            background-color: #e8f5e9;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Rabbit POC - AWS SES + S3 storage + Lambda calling rest API</h1>
+        <p>Just send a email to whatever-company@pettan-test.fun</p>
+
+        <h2>Print Jobs by Company</h2>
+        {% if companies_jobs %}
+            {% for company, jobs in companies_jobs.items() %}
+            <div class="company-section">
+                <div class="company-name">{{ company }}</div>
+                <div class="company-info">
+                    To submit print jobs for this company, please send emails to <span class="highlighted-email">{{ company }}@pettan-test.fun</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sender</th>
+                            <th>Receiver</th>
+                            <th>Upload Date</th>
+                            <th>File Name</th>
+                            <th>File Size</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for job in jobs %}
+                        <tr>
+                            <td>{{ job.sender }}</td>
+                            <td>{{ job.receiver }}</td>
+                            <td>{{ job.upload_date }}</td>
+                            <td>{{ job.original_filename }}</td>
+                            <td>{{ job.file_size }} bytes</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-message">No print jobs available.</div>
+        {% endif %}
+    </div>
+</body>
+</html>
